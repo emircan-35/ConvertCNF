@@ -33,7 +33,7 @@ public class Test {
             //at this step, construction of given CFG via txt is completed
 
             //now, finding its Chomsky Normal Form
-
+            ContextFreeGrammar convertedToCNF= CFG.getChomskyNormalForm();
 
             scanner.close();
         } catch (FileNotFoundException e) {
