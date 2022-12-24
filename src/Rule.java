@@ -13,15 +13,12 @@ public class Rule {
 
     private void loadRule(String[] line,ArrayList<Terminal> alphabet){
         this.leftSide=new Variable(line[0]);
-
         //for the right side, every char represents a variable or a terminal, so
         char[] rightSide=line[1].toCharArray();
         for(int i=0;i<rightSide.length;i++){
             //from char to str
             String element= String.valueOf(rightSide[i]);
-            if (rightSide[i]=='|'){
-                this.rightSide.add(new RightSideElement());
-            }else if (isVariable(element,alphabet)){
+            if (isVariable(element,alphabet)){
                 this.rightSide.add(new RightSideElement(new Variable(element)));
             }else{
                 this.rightSide.add(new RightSideElement(new Terminal(element)));
@@ -56,11 +53,6 @@ public class Rule {
         private Variable variable;
         private Terminal terminal;
 
-        private boolean isOrOperand;
-
-        public RightSideElement(){
-            this.isOrOperand=true;
-        }
         public RightSideElement(Variable variable) {
             if (this.terminal!=null)return;
             this.variable = variable;
