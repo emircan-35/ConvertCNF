@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ContextFreeGrammar {
     private Variable startVariable; //Because it is a special variable, it is also stored separately
@@ -6,7 +7,7 @@ public class ContextFreeGrammar {
 
     private ArrayList<Rule> rules;
 
-
+    private ContextFreeGrammar chomskyNormalForm;
     public ContextFreeGrammar(){
         this.alphabet=new ArrayList<Terminal>();
         this.rules=new ArrayList<Rule>();
@@ -45,8 +46,16 @@ public class ContextFreeGrammar {
     }
 
     public ContextFreeGrammar getChomskyNormalForm(){
-        ContextFreeGrammar CFG = new ContextFreeGrammar();
-        return CFG;
+        this.chomskyNormalForm= new ContextFreeGrammar();
+        changeStartVariable();
+
+        return this.chomskyNormalForm;
     }
+    private void changeStartVariable(){
+        //!assuming S0 is never used before!
+        //add its rule
+        this.chomskyNormalForm.addRuleWithStartVariable("S0-S");
+    }
+
 
 }
