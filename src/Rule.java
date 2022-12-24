@@ -5,12 +5,19 @@ public class Rule {
     private ArrayList<VariableTerminal> rightSide; //Because right side can occur from both type elements
 
 
-    public Rule(String line) {
-        loadRule(line);
+    public Rule(String[] lineSplit,ArrayList<Terminal> alphabet) {
+        loadRule(lineSplit,alphabet);
     }
 
 
-    private void loadRule(String line){
+    private void loadRule(String[] line,ArrayList<Terminal> alphabet){
+        this.leftSide=new Variable(line[0]);
+
+        //for the right side, every char represents a variable or a terminal, so
+        char[] rightSide=line[1].toCharArray();
+        for(int i=0;i<rightSide.length;i++){
+
+        }
 
     }
     public Variable getLeftSide() {

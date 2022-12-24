@@ -7,7 +7,11 @@ public class ContextFreeGrammar {
     private ArrayList<Rule> rules;
 
 
-    public ContextFreeGrammar(){}
+    public ContextFreeGrammar(){
+        this.alphabet=new ArrayList<Terminal>();
+        this.rules=new ArrayList<Rule>();
+
+    }
 
     public void addAlphabet(String line){
         //here, add the alphabet
@@ -25,10 +29,19 @@ public class ContextFreeGrammar {
 
     public void addRule(String line){
         //Here, add the rule to the
+        String[] lineFirstSplit=line.split("-");
+        //Create the rule and add it
+        this.rules.add(new Rule(lineFirstSplit,this.alphabet));
     }
 
     public void addRuleWithStartVariable(String line){
+        //First, splitting with '-'
+        String[] lineFirstSplit=line.split("-");
+        //The first element is the start variable, then first create and insert it
+        this.startVariable= new Variable(lineFirstSplit[0]);
 
+        //Create the rule and add it
+        this.rules.add(new Rule(lineFirstSplit,this.alphabet));
     }
 
     public ContextFreeGrammar getChomskyNormalForm(){
