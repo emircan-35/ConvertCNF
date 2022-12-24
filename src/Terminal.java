@@ -12,4 +12,9 @@ public class Terminal {
     public void setTerminal(String terminal) {
         this.terminal = terminal;
     }
+
+    public boolean isEqual(String element){
+        if (this.terminal.equals(element)) return true;
+        return false;
+    }
 }
