@@ -7,7 +7,10 @@ public class ContextFreeGrammar {
 
     private ArrayList<Rule> rules;
 
-    private ContextFreeGrammar chomskyNormalForm;
+
+
+
+
     public ContextFreeGrammar(){
         this.alphabet=new ArrayList<Terminal>();
         this.rules=new ArrayList<Rule>();
@@ -50,21 +53,44 @@ public class ContextFreeGrammar {
         addRule(line);
     }
 
-    public ContextFreeGrammar getChomskyNormalForm(){
-        this.chomskyNormalForm= new ContextFreeGrammar();
+    public void convertChomskyNormalForm(){
         //Step 1, changing step variable
         changeStartVariable();
 
         //Step 2, taking care of all € rules
-
-
-        return this.chomskyNormalForm;
+        System.out.println("asd");
+        handleEmptyRules();
     }
     private void changeStartVariable(){
         //!assuming S0 is never used before!
         //add its rule
-        this.chomskyNormalForm.addRuleWithStartVariable("S0-S");
+        this.addRuleWithStartVariable("S0-S");
+    }
+    private void handleEmptyRules(){
+        //IMPORTANT! WE only handle empty string which does not relate with start variable !
+        //Step 1, iterate all the rules
+        for (int i = 0; i < rules.size(); i++) {
+            Rule rule=rules.get(i);
+            if ((!rule.getLeftSide().getVariable().equals(this.startVariable.getVariable())) &&rule.getRightSide().size()==1 && (rule.getRightSide().get(0)).isEmpty()){
+                //here means this rule should be deleted
+                //Before deleting, copy its left side
+                Variable leftSide=rule.getLeftSide();
+                rules.remove(i);
+                foundEmptyLeftSide(leftSide);
+            }
+        }
+
     }
 
-
+    private void foundEmptyLeftSide(Variable leftSide) {
+        //Step 1, iterate all the rules
+        for (int i = 0; i < rules.size(); i++) {
+            Rule rule = rules.get(i);
+            ArrayList<Rule.RightSideElement> rightSide = rule.getRightIfContains(leftSide);
+            if (rightSide==null)continue;
+            //Iterate over the right side
+            //For every occurrence of deleted variable, insert a new one with its deleted form
+            //TODO char üzerinden yap!
+        }
+    }
 }

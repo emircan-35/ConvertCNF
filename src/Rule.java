@@ -4,7 +4,14 @@ public class Rule {
     private Variable leftSide;
     private ArrayList<RightSideElement> rightSide; //Because right side can occur from both type elements
 
-
+    public ArrayList<RightSideElement>  getRightIfContains(Variable variable){
+        for (int i = 0; i < rightSide.size(); i++) {
+            if (rightSide.get(i).isContain(variable)){
+                return rightSide;
+            }
+        }
+        return null;
+    }
     public Rule(String[] lineSplit,ArrayList<Terminal> alphabet) {
         this.rightSide=new ArrayList<>();
         loadRule(lineSplit,alphabet);
@@ -49,7 +56,7 @@ public class Rule {
         this.rightSide = rightSide;
     }
 
-    private class RightSideElement {
+    public class RightSideElement {
         private Variable variable;
         private Terminal terminal;
 
@@ -62,7 +69,15 @@ public class Rule {
             if (this.variable!=null)return;
             this.terminal = terminal;
         }
+        public boolean isEmpty(){
+            if (this.variable!=null && this.variable.getVariable().equals("€"))return true;
+            return false;
+        }
 
+        public boolean isContain(Variable variable){
+            if (this.variable!=null && this.variable.getVariable().equals(variable.getVariable()))return true;
+            return false;
+        }
         public Variable getVariable() {
             return variable;
         }
