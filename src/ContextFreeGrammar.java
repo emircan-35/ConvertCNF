@@ -13,12 +13,12 @@ public class ContextFreeGrammar {
         //here, add the alphabet
         //The alphaber line has a pattern like E=X,Y,Z ...
         //So, we can split it with = in first, then interested in , in it.
-        String[] alphabetSplittedFromText=((line.split("="))[1]).split(",");
+        String[] alphabetSplitFromText=((line.split("="))[1]).split(",");
         //We are interested with the right side, which has the pattern
 
         //Iterating over the alphabet, creating terminals and storing them in the CFG
-        for (int i=0;i<alphabetSplittedFromText.length;i++){
-            Terminal terminal=new Terminal(alphabetSplittedFromText[i]);
+        for (int i=0;i<alphabetSplitFromText.length;i++){
+            Terminal terminal=new Terminal(alphabetSplitFromText[i]);
             this.alphabet.add(terminal);
         }
     }
