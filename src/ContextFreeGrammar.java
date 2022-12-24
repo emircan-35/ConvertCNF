@@ -21,4 +21,9 @@ public class ContextFreeGrammar {
 
     }
 
+    public ContextFreeGrammar getChomskyNormalForm(){
+        ContextFreeGrammar CFG = new ContextFreeGrammar();
+        return CFG;
+    }
+
 }

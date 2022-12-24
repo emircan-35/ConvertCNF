@@ -34,6 +34,7 @@ public class Test {
 
             //now, finding its Chomsky Normal Form
 
+
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
