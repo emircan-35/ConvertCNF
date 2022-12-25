@@ -33,7 +33,22 @@ public class Rule {
         }
 
     }
-
+    public String getRightAsString(){
+        String right="";
+        for (int i = 0; i < this.rightSide.size(); i++) {
+            right+=this.rightSide.get(i).getString();
+        }
+        return right;
+    }
+    public String getRightUnit(){
+        return rightSide.get(0).getVariable().getVariable();
+    }
+    public boolean isUnit(){
+        if (rightSide.size()==1&&rightSide.get(0).getVariable()!=null){
+            return true;
+        }
+        return false;
+    }
     public String getRuleAsString(){
         String leftSide=this.leftSide.getVariable();
         String rightSideAsString="";
@@ -63,6 +78,26 @@ public class Rule {
     public void setRightSide(ArrayList<RightSideElement> rightSide) {
         this.rightSide = rightSide;
     }
+    @Override
+    public boolean equals(Object o) {
+
+        // If the object is compared with itself then return true
+        if (o == this) {
+            return true;
+        }
+
+        /* Check if o is an instance of Complex or not
+          "null instanceof [type]" also returns false */
+        if (!(o instanceof Rule)) {
+            return false;
+        }
+
+        // typecast o to Complex so that we can compare data members
+        Rule c = (Rule) o;
+
+        // Compare the data members and return accordingly
+        return (this.getLeftSide().getVariable().equals(c.getLeftSide().getVariable())&&this.getRightAsString().equals(c.getRightAsString()));
+    }
 
     public class RightSideElement {
         private Variable variable;
@@ -88,6 +123,8 @@ public class Rule {
             if (this.variable!=null && this.variable.getVariable().equals("€"))return true;
             return false;
         }
+
+
 
         public boolean isContain(Variable variable){
             if (this.variable!=null && this.variable.getVariable().equals(variable.getVariable()))return true;

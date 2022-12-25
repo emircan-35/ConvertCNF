@@ -1,6 +1,8 @@
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ContextFreeGrammar {
     private Variable startVariable; //Because it is a special variable, it is also stored separately
@@ -62,20 +64,71 @@ public class ContextFreeGrammar {
     public void convertChomskyNormalForm(){
         //Step 1, changing step variable
         changeStartVariable();
-        writeRules();
-        System.out.println("COMPLETED CHANGING START VARIABLE ! ! !\n\n\n");
 
         //Step 2, taking care of all € rules
         handleEmptyRules();
+
+        handleUnitRules();
+
         System.out.println("ELIMINATED EMPTY STRINGS");
-        writeRules();
+writeRules();
 
     }
     private void handleUnitRules(){
-        //Iteting over all the rules
+        //Iterating over all the rules
+        Object[] rulesLocal=this.rules.toArray();
+        for (int i = 0; i < rulesLocal.length; i++) {
+            Rule ruleToCheck= (Rule) rulesLocal[i];
+            if (ruleToCheck.isUnit()){
+                //Remove this rule
+                if(!this.rules.remove(ruleToCheck)) System.out.println("problem when deleting");
+                String rightJustRemoved=ruleToCheck.getRightUnit();
+                ArrayList<String> newRightRules=getRightOfThis(rightJustRemoved);
+                //Now adding the new rule
+                for (int j = 0; j < newRightRules.size(); j++) {
+                    this.addRule(ruleToCheck.getLeftSide().getVariable()+"-"+newRightRules.get(j));
+                }
+            }
+        }
+        //Last deletion for the ones coming again
+        for (int i = 0; i < this.rules.size(); i++) {
+            if (this.rules.get(i).isUnit()){
+                this.rules.remove(i);
+                i=0;
+            }
+        }
+
+        //Delete duplicate rules
+        ArrayList<Rule> newList=new ArrayList<>();
+        for (int i = 0; i < this.rules.size(); i++) {
+            boolean isContain=false;
+            Rule ruleToCheck=this.rules.get(i);
+            for (int j = 0; j <newList.size() ; j++) {
+                if (newList.get(j).equals(ruleToCheck)){
+                    isContain=true;
+                    break;
+                }
+            }
+            if (!isContain){
+                newList.add(ruleToCheck);
+            }
+        }
+        this.rules=newList;
+
 
     }
 
+    private ArrayList<String> getRightOfThis(String leftSide){
+        Object[] rulesLocal=this.rules.toArray();
+        ArrayList<String> rightSide=new ArrayList<>();
+        for (int i = 0; i < rulesLocal.length; i++) {
+            Rule ruleToCheck= (Rule) rulesLocal[i];
+            if (ruleToCheck.getLeftSide().getVariable().equals(leftSide)){
+                rightSide.add(ruleToCheck.getRightAsString());
+            }
+        }
+        return rightSide;
+    }
     private void writeRules(){
         for (int i = 0; i < this.rules.size(); i++) {
             System.out.println(rules.get(i).getRuleAsString());
@@ -95,12 +148,8 @@ public class ContextFreeGrammar {
                 //here means this rule should be deleted
                 //Before deleting, copy the rule
                 Variable leftSide=rule.getLeftSide();
-                System.out.println("handling below one");
-                System.out.println(rules.get(i).getRuleAsString());
                 rules.remove(i);
                 foundEmptyLeftSide(leftSide);
-                System.out.println("\n\nCURRENT SITUTATION GIVEN BELOW");
-                writeRules();
                 i=0;
             }
         }

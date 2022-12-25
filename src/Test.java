@@ -34,7 +34,6 @@ public class Test {
 
             //now, finding its Chomsky Normal Form
             CFG.convertChomskyNormalForm();
-            System.out.println("asd");
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
