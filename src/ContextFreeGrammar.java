@@ -71,7 +71,10 @@ public class ContextFreeGrammar {
         writeRules();
 
     }
+    private void handleUnitRules(){
+        //Iteting over all the rules
 
+    }
 
     private void writeRules(){
         for (int i = 0; i < this.rules.size(); i++) {
