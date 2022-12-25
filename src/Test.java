@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Test {
 
-    private String fileName="CFG2.txt";
+    private String fileName="CFG.txt";
     private ContextFreeGrammar CFG;
     public Test(){
         this.CFG=new ContextFreeGrammar();

@@ -1,8 +1,4 @@
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class ContextFreeGrammar {
     private Variable startVariable; //Because it is a special variable, it is also stored separately
@@ -10,13 +6,15 @@ public class ContextFreeGrammar {
 
     private ArrayList<Rule> rules;
 
-
-
+    private ArrayList<Character> usedVariableLetters;
+    private ArrayList<String> leftSideUsedLetters;
 
 
     public ContextFreeGrammar(){
         this.alphabet=new ArrayList<Terminal>();
         this.rules=new ArrayList<Rule>();
+        this.usedVariableLetters=new ArrayList<>();
+        this.leftSideUsedLetters=new ArrayList<>();
 
     }
 
@@ -44,15 +42,30 @@ public class ContextFreeGrammar {
             lineFirstSplitAddedEmpty[1]="€";
             lineFirstSplit=lineFirstSplitAddedEmpty;
         }
+        if (!leftSideUsedLetters.contains(lineFirstSplit[0])){
+            leftSideUsedLetters.add(lineFirstSplit[0]);
+        }
         String[] rightSideRulesSeparatedByOr=lineFirstSplit[1].split("\\|");
         for (int i = 0; i < rightSideRulesSeparatedByOr.length; i++) {
             String[] lineSplitWithOrSymbol=new String[2];
             lineSplitWithOrSymbol[0]=lineFirstSplit[0];
             lineSplitWithOrSymbol[1]=rightSideRulesSeparatedByOr[i];
+            //add them to the above variableLetters, so that we are able to produce unique variable when needed
+            char[] variablesUsed=rightSideRulesSeparatedByOr[i].toCharArray();
+            for (int j = 0; j < variablesUsed.length; j++) usedVariableLetters.add(variablesUsed[j]);
             this.rules.add(new Rule(lineSplitWithOrSymbol,this.alphabet));
         }
     }
-
+    private String produceUniqueVariable(){
+        Random rd=new Random();
+        while(true){
+            int producedLetterDecimal=rd.nextInt(65,91);
+            char producedLetter=(char)producedLetterDecimal;
+            if (!usedVariableLetters.contains(producedLetter)){
+                return String.valueOf(producedLetter);
+            }
+        }
+    }
     public void addRuleWithStartVariable(String line){
         //First, splitting with '-'
         String[] lineFirstSplit=line.split("-");
@@ -70,9 +83,8 @@ public class ContextFreeGrammar {
 
         handleUnitRules();
 
-        System.out.println("ELIMINATED EMPTY STRINGS");
-writeRules();
-
+        convertProperForm();
+        writeContextFreeWithRulesORed();
     }
     private void handleUnitRules(){
         //Iterating over all the rules
@@ -118,6 +130,42 @@ writeRules();
 
     }
 
+    private void convertProperForm(){
+        int index=0;
+        while(index<this.rules.size()){//Until converting all of them
+            Rule ruleLocal=this.rules.get(index);
+            if (ruleLocal.getRightSide().size()>2){
+                String leftSide=ruleLocal.getLeftSide().getVariable();
+                String rightSide=ruleLocal.getRightAsString();
+                char[] rightSideAsChar=rightSide.toCharArray();
+                String remainingRight="";
+                String newVariable=produceUniqueVariable();
+                for (int i = 1; i < rightSideAsChar.length; i++) remainingRight+=rightSideAsChar[i];
+                this.addRule(newVariable+"-"+remainingRight);
+                this.addRule(leftSide+"-"+rightSideAsChar[0]+newVariable);
+                this.rules.remove(ruleLocal);
+                index=0;
+            }
+            index++;
+        }
+    }
+    private void writeContextFreeWithRulesORed(){
+        String[] rightSideElements=new String[leftSideUsedLetters.size()];
+        for (int i = 0; i < rightSideElements.length; i++) rightSideElements[i]="";
+        for (int i = 0; i < leftSideUsedLetters.size(); i++) {
+            for (int j = 0; j < this.rules.size(); j++) {
+                Rule ruleLocal=this.rules.get(j);
+                if (ruleLocal.getLeftSide().getVariable().equals(leftSideUsedLetters.get(i))){
+                    rightSideElements[i]+=ruleLocal.getRightAsString()+" | ";
+                }
+            }
+        }
+        
+        //Now writing
+        for (int i = 0; i < leftSideUsedLetters.size(); i++) {
+            System.out.println(leftSideUsedLetters.get(i)+" - "+rightSideElements[i]);
+        }
+    }
     private ArrayList<String> getRightOfThis(String leftSide){
         Object[] rulesLocal=this.rules.toArray();
         ArrayList<String> rightSide=new ArrayList<>();
