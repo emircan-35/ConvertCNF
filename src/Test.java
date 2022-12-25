@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Test {
 
-    private String fileName="CFG.txt";
+    private String fileName="CFG2.txt";
     private ContextFreeGrammar CFG;
     public Test(){
         this.CFG=new ContextFreeGrammar();
@@ -34,7 +34,7 @@ public class Test {
 
             //now, finding its Chomsky Normal Form
             CFG.convertChomskyNormalForm();
-
+            System.out.println("asd");
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

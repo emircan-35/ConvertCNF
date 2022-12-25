@@ -8,6 +8,9 @@ public class Variable {
     public String getVariable() {
         return variable;
     }
+    public Character getAsChar(){
+        return variable.toCharArray()[0];
+    }
 
     public void setVariable(String variable) {
         this.variable = variable;

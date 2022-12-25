@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class ContextFreeGrammar {
@@ -35,7 +36,12 @@ public class ContextFreeGrammar {
         //Here, add the rule to the
         String[] lineFirstSplit=line.split("-");
         //Create the rule and add it by also taking care of OR (|) symbol
-
+        if (lineFirstSplit.length==1){
+            String[] lineFirstSplitAddedEmpty=new String[2];
+            lineFirstSplitAddedEmpty[0]=lineFirstSplit[0];
+            lineFirstSplitAddedEmpty[1]="€";
+            lineFirstSplit=lineFirstSplitAddedEmpty;
+        }
         String[] rightSideRulesSeparatedByOr=lineFirstSplit[1].split("\\|");
         for (int i = 0; i < rightSideRulesSeparatedByOr.length; i++) {
             String[] lineSplitWithOrSymbol=new String[2];
@@ -56,10 +62,21 @@ public class ContextFreeGrammar {
     public void convertChomskyNormalForm(){
         //Step 1, changing step variable
         changeStartVariable();
+        writeRules();
+        System.out.println("COMPLETED CHANGING START VARIABLE ! ! !\n\n\n");
 
         //Step 2, taking care of all € rules
-        System.out.println("asd");
         handleEmptyRules();
+        System.out.println("ELIMINATED EMPTY STRINGS");
+        writeRules();
+
+    }
+
+
+    private void writeRules(){
+        for (int i = 0; i < this.rules.size(); i++) {
+            System.out.println(rules.get(i).getRuleAsString());
+        }
     }
     private void changeStartVariable(){
         //!assuming S0 is never used before!
@@ -73,10 +90,15 @@ public class ContextFreeGrammar {
             Rule rule=rules.get(i);
             if ((!rule.getLeftSide().getVariable().equals(this.startVariable.getVariable())) &&rule.getRightSide().size()==1 && (rule.getRightSide().get(0)).isEmpty()){
                 //here means this rule should be deleted
-                //Before deleting, copy its left side
+                //Before deleting, copy the rule
                 Variable leftSide=rule.getLeftSide();
+                System.out.println("handling below one");
+                System.out.println(rules.get(i).getRuleAsString());
                 rules.remove(i);
                 foundEmptyLeftSide(leftSide);
+                System.out.println("\n\nCURRENT SITUTATION GIVEN BELOW");
+                writeRules();
+                i=0;
             }
         }
 
@@ -84,13 +106,59 @@ public class ContextFreeGrammar {
 
     private void foundEmptyLeftSide(Variable leftSide) {
         //Step 1, iterate all the rules
-        for (int i = 0; i < rules.size(); i++) {
-            Rule rule = rules.get(i);
+        Object[] rules=  this.rules.toArray();
+        for (int i = 0; i < rules.length; i++) {
+            Rule rule = (Rule) rules[i];
             ArrayList<Rule.RightSideElement> rightSide = rule.getRightIfContains(leftSide);
             if (rightSide==null)continue;
             //Iterate over the right side
             //For every occurrence of deleted variable, insert a new one with its deleted form
-            //TODO char üzerinden yap!
+            String ruleAsStringToAdd=rule.getRuleAsString();
+            this.rules.remove(rule);
+            String[] ruleSplit=ruleAsStringToAdd.split("-");
+            String leftSideToAdd=ruleSplit[0];
+            String rightSideToAdd=ruleSplit[1];
+            ArrayList<String> allPossibilities=new ArrayList<>();
+            ArrayList<Character> currentString=new ArrayList<>();
+            for (char c : rightSideToAdd.toCharArray()) {
+                currentString.add(c);
+            }
+            addAllPossibilities(allPossibilities,currentString,0,leftSide.getAsChar());
+            //Now, add all the possibilities
+            for (int j = 0; j < allPossibilities.size(); j++) {
+                this.addRule(leftSideToAdd+"-"+allPossibilities.get(j));
+            }
+        }
+    }
+    private void addAllPossibilities(ArrayList<String> allPossibilities,ArrayList<Character> currentString,int startingIndex,Character deletedChar){
+        for (int i = startingIndex; i <currentString.size() ; i++) {
+            if (currentString.get(i)==deletedChar){
+                ArrayList<Character> deletedForm=new ArrayList<>();
+                deletedForm.addAll(currentString);
+                deletedForm.remove(i);
+                addAllPossibilities(allPossibilities,deletedForm,0,deletedChar);
+
+                //Existing form
+                addAllPossibilities(allPossibilities,currentString,i+1,deletedChar);
+            }
+        }
+        String stringToAdd=currentString.toString();
+        stringToAdd=stringToAdd.replace("[","");
+        stringToAdd=stringToAdd.replace("]","");
+        stringToAdd=stringToAdd.replace(",","");
+        stringToAdd=stringToAdd.replace(" ","");
+
+
+        //Check if it contains
+        boolean isContain=false;
+        for (int i = 0; i < allPossibilities.size(); i++) {
+            if (allPossibilities.get(i).equals(stringToAdd)){
+                isContain=true;
+                break;
+            }
+        }
+        if (!isContain){
+            allPossibilities.add(stringToAdd);
         }
     }
 }

@@ -34,6 +34,14 @@ public class Rule {
 
     }
 
+    public String getRuleAsString(){
+        String leftSide=this.leftSide.getVariable();
+        String rightSideAsString="";
+        for (int i = 0; i < this.rightSide.size(); i++) {
+            rightSideAsString+=this.rightSide.get(i).getString();
+        }
+        return leftSide+"-"+rightSideAsString;
+    }
     public boolean isVariable(String element,ArrayList<Terminal> alphabet){
         for (int i = 0; i < alphabet.size(); i++) {
             if (alphabet.get(i).isEqual(element)) return false;
@@ -68,6 +76,13 @@ public class Rule {
         public RightSideElement(Terminal terminal) {
             if (this.variable!=null)return;
             this.terminal = terminal;
+        }
+        public String getString(){
+            if (this.variable!=null){
+                return this.variable.getVariable();
+            }else{
+                return this.terminal.getTerminal();
+            }
         }
         public boolean isEmpty(){
             if (this.variable!=null && this.variable.getVariable().equals("€"))return true;
