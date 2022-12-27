@@ -211,7 +211,12 @@ public class ContextFreeGrammar {
             for (int j = 0; j < this.rules.size(); j++) {
                 Rule ruleLocal=this.rules.get(j);
                 if (ruleLocal.getLeftSide().getVariable().equals(leftSideUsedLetters.get(i))){
-                    rightSideElements[i]+=ruleLocal.getRightAsString()+" | ";
+                    String rightSide=rightSideElements[i];
+                    String[] rightSideSplit=rightSide.replaceAll("\\s+","").split("|");
+                    List<String>rightSideSplitAsList= Arrays.stream(rightSideSplit).toList();
+                    if (!rightSideSplitAsList.contains(ruleLocal.getRightAsString())){
+                        rightSideElements[i]+=ruleLocal.getRightAsString()+" | ";
+                    }
                 }
             }
         }
@@ -236,7 +241,7 @@ public class ContextFreeGrammar {
         }
 
         for (int i = 0; i < leftSideUsedLetters.size(); i++) {
-            if (leftSideUsedLetters.get(i)!=null) {
+            if (leftSideUsedLetters.get(i)!=null&&rightSideElements[i]!=null&&rightSideElements[i]!="") {
                 System.out.println(leftSideUsedLetters.get(i) + " - " + (rightSideElements[i].substring(0, rightSideElements[i].length() - 2)));
             }
         }
@@ -279,15 +284,24 @@ public class ContextFreeGrammar {
         this.addRuleWithStartVariable("S0-S");
     }
     private void handleEmptyRules(){
-        //IMPORTANT! WE only handle empty string which does not relate with start variable !
+
+
+        //To prevent infinite loops, creating an array containing just handled left sides
+        ArrayList<String> justHandledLeftSideLetter=new ArrayList<>();
         //Step 1, iterate all the rules
         for (int i = 0; i < rules.size(); i++) {
             Rule rule=rules.get(i);
-            if ((!rule.getLeftSide().getVariable().equals(this.startVariable.getVariable())) &&rule.getRightSide().size()==1 && (rule.getRightSide().get(0)).isEmpty()){
+            if ((!rule.getLeftSide().getVariable().equals(this.startVariable.getVariable())) &&rule.getRightSide().size()==1
+                    && (rule.getRightSide().get(0)).isEmpty()){
+                if ((justHandledLeftSideLetter.contains(rule.getLeftSide().getVariable()))){//Indicates infinite loop
+                    rules.remove(i);
+                    i=0;
+                    continue;
+                }
                 //here means this rule should be deleted
                 //Before deleting, copy the rule
                 Variable leftSide=rule.getLeftSide();
-                rules.remove(i);
+                justHandledLeftSideLetter.add(leftSide.getVariable());
                 foundEmptyLeftSide(leftSide);
                 i=0;
             }

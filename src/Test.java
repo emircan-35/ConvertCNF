@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Test {
 
-    private String fileName="CFG2.txt";
+    private String fileName="CFG4.txt";
     private ContextFreeGrammar CFG;
     public Test(){
         this.CFG=new ContextFreeGrammar();
@@ -27,17 +27,19 @@ public class Test {
                         CFG.addRuleWithStartVariable(line);
                     }else{//Otherwise, which is the last possible case, it is an ordinary rule
                         CFG.addRule(line);
+
                     }
                 }
             }
             //at this step, construction of given CFG via txt is completed
-
-            //now, finding its Chomsky Normal Form
-            CFG.convertChomskyNormalForm();
             scanner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        //now, finding its Chomsky Normal Form
+        CFG.convertChomskyNormalForm();
+
+        //Done :)
     }
 
 }
