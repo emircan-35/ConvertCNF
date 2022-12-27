@@ -1,0 +1,4 @@
+E=a,b
+S-aB|ASA
+A-B|S
+B-b|€

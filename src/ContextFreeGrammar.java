@@ -6,14 +6,12 @@ public class ContextFreeGrammar {
 
     private ArrayList<Rule> rules;
 
-    private ArrayList<Character> usedVariableLetters;
     private ArrayList<String> leftSideUsedLetters;
 
 
     public ContextFreeGrammar(){
         this.alphabet=new ArrayList<Terminal>();
         this.rules=new ArrayList<Rule>();
-        this.usedVariableLetters=new ArrayList<>();
         this.leftSideUsedLetters=new ArrayList<>();
 
     }
@@ -50,9 +48,6 @@ public class ContextFreeGrammar {
             String[] lineSplitWithOrSymbol=new String[2];
             lineSplitWithOrSymbol[0]=lineFirstSplit[0];
             lineSplitWithOrSymbol[1]=rightSideRulesSeparatedByOr[i];
-            //add them to the above variableLetters, so that we are able to produce unique variable when needed
-            char[] variablesUsed=rightSideRulesSeparatedByOr[i].toCharArray();
-            for (int j = 0; j < variablesUsed.length; j++) usedVariableLetters.add(variablesUsed[j]);
             this.rules.add(new Rule(lineSplitWithOrSymbol,this.alphabet));
         }
     }
@@ -61,7 +56,7 @@ public class ContextFreeGrammar {
         while(true){
             int producedLetterDecimal=rd.nextInt(65,91);
             char producedLetter=(char)producedLetterDecimal;
-            if (!usedVariableLetters.contains(producedLetter)){
+            if (!leftSideUsedLetters.contains(String.valueOf(producedLetter))){
                 return String.valueOf(producedLetter);
             }
         }
@@ -76,16 +71,71 @@ public class ContextFreeGrammar {
 
     public void convertChomskyNormalForm(){
         //Step 1, changing step variable
-        changeStartVariable();
+        System.out.println("CFG FORM\n");
+        writeContextFreeWithRulesORed(true);
 
+        System.out.println("\nELIMINATING € RULES\n");
         //Step 2, taking care of all € rules
         handleEmptyRules();
+        writeContextFreeWithRulesORed(true);
 
+        System.out.println("\nELIMINATING UNIT PRODUCTIONS\n");
         handleUnitRules();
+        writeContextFreeWithRulesORed(true);
 
+        System.out.println("\nELIMINATING TERMINALS\n");
+        eliminateTerminals();
+        writeContextFreeWithRulesORed(true);
+
+        System.out.println("\nCONVERTING PROPER FORM AND SIMPLIFYING\n");
         convertProperForm();
-        writeContextFreeWithRulesORed();
+        writeContextFreeWithRulesORed(true);
     }
+
+    private void eliminateTerminals(){
+        int rulePointer=0;
+        while(rulePointer<this.rules.size()){
+            //Get the rule
+            Rule ruleLocal=this.rules.get(rulePointer);
+
+            //Get the right side
+            ArrayList<Rule.RightSideElement> rightSide=ruleLocal.getRightSide();
+
+            //Search for a terminal located on the right side
+            if (rightSide.size()>1) {
+                for (int i = 0; i < rightSide.size(); i++) {
+                    if (rightSide.get(i).getTerminal()!=null){
+                        String deletedTerminal=rightSide.get(i).getTerminal().getTerminal();
+                        String newVariableLetter=produceUniqueVariable();
+                        if (newVariableLetter.equals("S")){
+                            System.out.println("problem HERE");
+                        }
+                        //Get the right side as string
+                        String rightSideAsString=ruleLocal.getRightAsString();
+                        //Get left side
+                        String letfSide=ruleLocal.getLeftSide().getVariable();
+                        //Delete this rule
+                        this.rules.remove(rulePointer);
+
+                        //Create new variable
+                        this.addRule(newVariableLetter+"-"+deletedTerminal);
+
+                        //Replace all the terminal values with newly created variable
+                        rightSideAsString=rightSideAsString.replaceAll(deletedTerminal,newVariableLetter);
+
+                        //Add new rule without this terminal
+                        this.addRule(letfSide+"-"+rightSideAsString);
+
+                        //Look from start
+                        rulePointer=-1;
+                        break;
+                    }
+                }
+            }
+            rulePointer++;
+        }
+    }
+
     private void handleUnitRules(){
         //Iterating over all the rules
         Object[] rulesLocal=this.rules.toArray();
@@ -132,6 +182,8 @@ public class ContextFreeGrammar {
 
     private void convertProperForm(){
         int index=0;
+        //To prevent needless duplications, holding newly created rules
+
         while(index<this.rules.size()){//Until converting all of them
             Rule ruleLocal=this.rules.get(index);
             if (ruleLocal.getRightSide().size()>2){
@@ -139,8 +191,9 @@ public class ContextFreeGrammar {
                 String rightSide=ruleLocal.getRightAsString();
                 char[] rightSideAsChar=rightSide.toCharArray();
                 String remainingRight="";
-                String newVariable=produceUniqueVariable();
                 for (int i = 1; i < rightSideAsChar.length; i++) remainingRight+=rightSideAsChar[i];
+
+                String newVariable=produceUniqueVariable();
                 this.addRule(newVariable+"-"+remainingRight);
                 this.addRule(leftSide+"-"+rightSideAsChar[0]+newVariable);
                 this.rules.remove(ruleLocal);
@@ -149,7 +202,9 @@ public class ContextFreeGrammar {
             index++;
         }
     }
-    private void writeContextFreeWithRulesORed(){
+
+
+    private void writeContextFreeWithRulesORed(boolean willSimplified){
         String[] rightSideElements=new String[leftSideUsedLetters.size()];
         for (int i = 0; i < rightSideElements.length; i++) rightSideElements[i]="";
         for (int i = 0; i < leftSideUsedLetters.size(); i++) {
@@ -160,10 +215,46 @@ public class ContextFreeGrammar {
                 }
             }
         }
-        
-        //Now writing
+        //Using simplification
+        if (willSimplified){
+            for (int i = 0; i < rightSideElements.length; i++) {
+                for (int j = i+1; j < rightSideElements.length; j++) {
+                    if (rightSideElements[i]!=null&&rightSideElements[i].equals(rightSideElements[j])){
+                        //Then no need to duplicate i, deleting j
+                        String letterDeletedLeft=leftSideUsedLetters.get(j);
+                        leftSideUsedLetters.set(j,null);
+                        rightSideElements[j]=null;
+                        for (int k = 0; k < rightSideElements.length; k++) {
+                            if (rightSideElements[k]!=null&&leftSideUsedLetters.get(i)!=null){
+                                rightSideElements[k]=rightSideElements[k].replaceAll(letterDeletedLeft,leftSideUsedLetters.get(i));
+                            }
+                        }
+                        i=0;
+                    }
+                }
+            }
+        }
+
         for (int i = 0; i < leftSideUsedLetters.size(); i++) {
-            System.out.println(leftSideUsedLetters.get(i)+" - "+rightSideElements[i]);
+            if (leftSideUsedLetters.get(i)!=null) {
+                System.out.println(leftSideUsedLetters.get(i) + " - " + (rightSideElements[i].substring(0, rightSideElements[i].length() - 2)));
+            }
+        }
+        //To prevent future errors, construct CFG with these new rules
+        for (int i = 0; i < rightSideElements.length; i++) {
+            if (rightSideElements[i]!=null)rightSideElements[i]=rightSideElements[i].replaceAll("\\s+","");
+        }
+
+        Object[] leftSideLettersCopy= leftSideUsedLetters.toArray();
+        rules=new ArrayList<>();
+        leftSideUsedLetters=new ArrayList<>();
+        for (int i = 0; i < leftSideLettersCopy.length; i++) {
+            if (leftSideLettersCopy[i]!=null&&((String) leftSideLettersCopy[i]!="")&&rightSideElements[i]!=null&&rightSideElements[i]!=""){
+                String[] rightSideSeparated=rightSideElements[i].split("\\|");
+                for (int j = 0; j < rightSideSeparated.length; j++) {
+                    this.addRule(((String) leftSideLettersCopy[i])+"-"+rightSideSeparated[j]);
+                }
+            }
         }
     }
     private ArrayList<String> getRightOfThis(String leftSide){

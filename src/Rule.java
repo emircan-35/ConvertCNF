@@ -75,6 +75,13 @@ public class Rule {
         return rightSide;
     }
 
+    public void changeVaraible(Variable newVariable,Terminal deleteTerminal){
+        for (int i = 0; i < this.rightSide.size(); i++) {
+            if (this.rightSide.get(i).getTerminal()!=null&&this.rightSide.get(i).getTerminal()==deleteTerminal){
+                rightSide.set(i,new RightSideElement(newVariable));
+            }
+        }
+    }
     public void setRightSide(ArrayList<RightSideElement> rightSide) {
         this.rightSide = rightSide;
     }
