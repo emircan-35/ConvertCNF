@@ -1,22 +1,5 @@
-#Converting given Context-Free Grammar (CFG) to Chomsky's Normal Form (CNF)
+# Converting given Context-Free Grammar (CFG) to Chomsky's Normal Form (CNF)
 
-![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.001.png)![Logo
-
-Description automatically generated with medium confidence](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.002.png)                                                                        
-
-
-**THEORY OF COMPUTATION**
-
-**CME – 3203**
-
-![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.003.png)
-
-Report – Assignment 1
-
-
-
-
-**Converting CFGs to Chomsky Normal form** 
 
 
 
@@ -67,7 +50,7 @@ By Emircan Tepe
 
 
 1. # DESCRIPTION
-![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.004.png)	The assignment is based on the converting any given Context-Free Grammar (CFG) to Chomsky Normal Form (CNF). Any CFG has a CNF which makes the working on the grammar easier than the first given form. CNF is described as follows[1]:
+![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.004.png)	The program is based on the converting any given Context-Free Grammar (CFG) to Chomsky Normal Form (CNF). Any CFG has a CNF which makes the working on the grammar easier than the first given form. CNF is described as follows[1]:
 
 A context-free grammar is in Chomsky Normal Form if every rule is of the form
 A *à* BC
@@ -82,7 +65,7 @@ C may not be the start variable. In addition, we permit the rule S ***à*** ε, 
 1. Eliminate Terminals
 1. Break variable strings longer than 2
 
-`	`In the development of this assignment, the only resource taken help from is the course’s text book[1], also referenced in the above formula. It should also be noted that benefits of Object Oriented Programming (OOP) is highly used instead of only working with functions and strings. Although the assignment has many phases that can be potentially reported in detail, only the four steps given above and their pseudo codes are detailed in the following section for the sake of simplicity, but one can still see the development
+`	`In the development of this program, the only resource taken help from is the course’s text book[1], also referenced in the above formula. It should also be noted that benefits of Object Oriented Programming (OOP) is highly used instead of only working with functions and strings. Although the program has many phases that can be potentially reported in detail, only the four steps given above and their pseudo codes are detailed in the following section for the sake of simplicity, but one can still see the development
 
 in the codes easily because it is written as possible as clear by following OOP design paradigms.
 
