@@ -27,14 +27,14 @@ A*à* a
 where a is any terminal and A, B, and C are any variables—except that B and 
 C may not be the start variable. In addition, we permit the rule S ***à*** ε, where S is the start variable. 
 
-`	`The conversion algorithm consists of many steps, basically can be divided to 4, as follows;
+The conversion algorithm consists of many steps, basically can be divided to 4, as follows;
 
 1. Eliminate Empty (€) Rules
 1. Eliminate Unit Production
 1. Eliminate Terminals
 1. Break variable strings longer than 2
 
-`	`In the development of this program, the only resource taken help from is the course’s text book[1], also referenced in the above formula. It should also be noted that benefits of Object Oriented Programming (OOP) is highly used instead of only working with functions and strings. Although the program has many phases that can be potentially reported in detail, only the four steps given above and their pseudo codes are detailed in the following section for the sake of simplicity, but one can still see the development
+In the development of this program, the only resource taken help from is the course’s text book[1], also referenced in the above formula. It should also be noted that benefits of Object Oriented Programming (OOP) is highly used instead of only working with functions and strings. Although the program has many phases that can be potentially reported in detail, only the four steps given above and their pseudo codes are detailed in the following section for the sake of simplicity, but one can still see the development
 
 in the codes easily because it is written as possible as clear by following OOP design paradigms.
 
@@ -62,17 +62,17 @@ Three different functions are used for this task. Pseudo codes of them are also 
 
 **Function 1,** *addAllPossibilities*
 
-`	`This function calculates the all posibilities for the given string based on the changing variable given to the function. It works recursively. It is **fully** designed by me without taking any help from outside, as all the program.
+This function calculates the all posibilities for the given string based on the changing variable given to the function. It works recursively. It is **fully** designed by me without taking any help from outside, as all the program.
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.005.png)
 
-`	`It takes four input values: "allPossibilities", which is an array list to store the combinations; "currentString", which is the string to generate combinations from; "startingIndex", which is the index in the string to start generating combinations from; and "deletedChar", which is the character to potentially delete at each step.
+It takes four input values: "allPossibilities", which is an array list to store the combinations; "currentString", which is the string to generate combinations from; "startingIndex", which is the index in the string to start generating combinations from; and "deletedChar", which is the character to potentially delete at each step.
 
-`	`The function first iterates through the "currentString" and checks if the current character is equal to "deletedChar". If it is, it creates a copy of "currentString" called "deletedForm" and removes the current character from "deletedForm". It then calls itself recursively with "deletedForm" as the new "currentString" and a starting index of 0. It also calls itself recursively with the original "currentString" and an incremented starting index so that it will cal itself all the possibilities for a given string.
+The function first iterates through the "currentString" and checks if the current character is equal to "deletedChar". If it is, it creates a copy of "currentString" called "deletedForm" and removes the current character from "deletedForm". It then calls itself recursively with "deletedForm" as the new "currentString" and a starting index of 0. It also calls itself recursively with the original "currentString" and an incremented starting index so that it will cal itself all the possibilities for a given string.
 
 **Function 2,** *handleEmptyRules*
 
-`	`The **handleEmptyRules** function is the method that handles rules in a grammar that have an empty right side. Below is the pseudo code and explanation of it.
+The **handleEmptyRules** function is the method that handles rules in a grammar that have an empty right side. Below is the pseudo code and explanation of it.
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.006.png)
 
@@ -85,11 +85,11 @@ Three different functions are used for this task. Pseudo codes of them are also 
 - If all of these conditions are met, the function checks if the left side of the rule is present in the **justHandledLeftSideLetter** list. If it is, the function removes the rule from the list and sets the loop counter **i** to 0 to start the loop over again.
 - If the left side of the rule is not present in the **justHandledLeftSideLetter** list, the function stores the left side in the **justHandledLeftSideLetter** list and calls the **foundEmptyLeftSide** function with the left side as input. It then sets the loop counter **i** to 0 to start the loop over again.
 
-`	`Overall, the **handleEmptyRules** function is designed to remove rules from a grammar that have an empty right side and to prevent infinite loops by keeping track of the left sides of rules that have been handled. It does this by iterating through the list of rules and checking for certain conditions, then removing the rule and starting the loop over again if necessary.
+Overall, the **handleEmptyRules** function is designed to remove rules from a grammar that have an empty right side and to prevent infinite loops by keeping track of the left sides of rules that have been handled. It does this by iterating through the list of rules and checking for certain conditions, then removing the rule and starting the loop over again if necessary.
 
  **Function 3,** *foundEmpryLeftSide*
 
-`	`The **foundEmptyLeftSide** functionis the method that performs a manipulation on the rules of a grammar when a rule with an empty right side is found. Below is pseudo code and an explanation of what the function does.
+The **foundEmptyLeftSide** functionis the method that performs a manipulation on the rules of a grammar when a rule with an empty right side is found. Below is pseudo code and an explanation of what the function does.
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.007.png)
 
@@ -101,7 +101,7 @@ Three different functions are used for this task. Pseudo codes of them are also 
 - It calls the **addAllPossibilities** function with **allPossibilities**, **currentString**, an index of 0, and **leftSide.getAsChar()** as input. This generates a list of all possible combinations of **rightSideToAdd**, with the option to delete the character stored in **leftSide** at each step.
 - It then iterates through **allPossibilities** and adds each combination as a new rule to the list of rules.
 1. ## Eliminate Unit Production
-`	`The deleteUnits function is the method that removes unit rules from a grammar and eliminates duplicate rules. Below is the pseudo code and an explanation of what the function does:
+The deleteUnits function is the method that removes unit rules from a grammar and eliminates duplicate rules. Below is the pseudo code and an explanation of what the function does:
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.008.png)
 
@@ -113,11 +113,11 @@ Three different functions are used for this task. Pseudo codes of them are also 
 - Finally, it iterates through the list of rules and removes any duplicates by creating a new list called newList and adding only unique rules to it. It then assigns newList to the list of rules.
 
 ## Eliminate terminals
-`	`The **eliminateTerminals** function is a method that eliminates terminal symbols from the right sides of rules in a grammar. Below is the pseudo code and explanation.
+The **eliminateTerminals** function is a method that eliminates terminal symbols from the right sides of rules in a grammar. Below is the pseudo code and explanation.
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.009.png)
 
-`	`It does this by iterating through the list of rules and searching for a terminal symbol on the right side of each rule. If it finds a terminal symbol, it creates a new nonterminal symbol, adds a new rule with the new symbol and the terminal symbol as the left and right sides respectively, and replaces the terminal symbol with the new symbol in the right side of the original rule. It then adds the modified original rule back to the list of rules and starts the loop over again.
+It does this by iterating through the list of rules and searching for a terminal symbol on the right side of each rule. If it finds a terminal symbol, it creates a new nonterminal symbol, adds a new rule with the new symbol and the terminal symbol as the left and right sides respectively, and replaces the terminal symbol with the new symbol in the right side of the original rule. It then adds the modified original rule back to the list of rules and starts the loop over again.
 
 Here is a detailed explanation of how the function works:
 
@@ -132,11 +132,11 @@ Here is a detailed explanation of how the function works:
 
 Overall, the **eliminateTerminals** function is designed to eliminate terminal symbols from the right sides of rules in a grammar by creating new nonterminal symbols in their place and modifying the original rules to use the new symbols. It does this by iterating through the list of rules, searching for terminal
 9. ## Break Variable Strings longer than 2
-`	`The convertProperForm function is a method that breaks the rules in a grammar to a proper form, where the right side of each rule has at most two elements. Below is the pseudo code and explanation.
+The convertProperForm function is a method that breaks the rules in a grammar to a proper form, where the right side of each rule has at most two elements. Below is the pseudo code and explanation.
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.010.png)
 
-`	`It achieves this by iterating through the list of rules and checking if the right side of each rule has more than two elements. If it does, it creates two new rules: one with a new variable letter and the remaining elements of the right side as the left and right sides respectively, and one with the original left side and the first element of the right side concatenated with the new variable letter as the left and right sides respectively. It then removes the original rule from the list and starts the loop over again.
+It achieves this by iterating through the list of rules and checking if the right side of each rule has more than two elements. If it does, it creates two new rules: one with a new variable letter and the remaining elements of the right side as the left and right sides respectively, and one with the original left side and the first element of the right side concatenated with the new variable letter as the left and right sides respectively. It then removes the original rule from the list and starts the loop over again.
 
 Here is a detailed explanation of how the function works:
 
@@ -153,6 +153,5 @@ Here is a detailed explanation of how the function works:
 11. The while loop ends when index is no longer less than the length of the list of rules.
 
 
-
-1. # REFERENCES
+# REFERENCES
 **[1]** Sipser, M. (2013), *Introduction to the Theory of Computation*, *pg-109*, Course Technology, Boston, MA. 
