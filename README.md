@@ -1,5 +1,4 @@
-#Converting given Context-Free Grammar (CFG) to Chomsky's Normal Form (CNF) 
-*Emircan Tepe                                                                                                                                 December 27, 2022**
+#Converting given Context-Free Grammar (CFG) to Chomsky's Normal Form (CNF)
 
 ![](Aspose.Words.9550ed75-a6a3-48ae-89fb-21f14b59403f.001.png)![Logo
 
