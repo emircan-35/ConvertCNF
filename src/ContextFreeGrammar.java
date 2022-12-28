@@ -87,8 +87,10 @@ public class ContextFreeGrammar {
         eliminateTerminals();
         writeContextFreeWithRulesORed(true);
 
-        System.out.println("\nCONVERTING PROPER FORM AND SIMPLIFYING\n");
+        System.out.println("\nBREAK VARIABLE STRINGS LONGER THAN 2\n");
         convertProperForm();
+        writeContextFreeWithRulesORed(true);
+        System.out.println("\n\nRESULTING CNF\n\n");
         writeContextFreeWithRulesORed(true);
     }
 
@@ -306,7 +308,6 @@ public class ContextFreeGrammar {
                 i=0;
             }
         }
-
     }
 
     private void foundEmptyLeftSide(Variable leftSide) {

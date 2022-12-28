@@ -4,16 +4,17 @@ import java.util.Scanner;
 
 public class Test {
 
-    private String fileName="CFG4.txt";
+    private String path;
     private ContextFreeGrammar CFG;
-    public Test(){
+    public Test(String path){
+        this.path=path;
         this.CFG=new ContextFreeGrammar();
         loadFromFile();
     }
 
     private void loadFromFile(){
         try {
-            Scanner scanner = new Scanner(new File(fileName));
+            Scanner scanner = new Scanner(new File(path));
             boolean isFirstLine=true; //Because first line specified for the alphabet
             boolean isFirstRule=true;
             while (scanner.hasNextLine()) {
